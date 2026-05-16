@@ -1,0 +1,25 @@
+# env
+.env
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+.ipynb_checkpoints/
+
+# model weights & large outputs
+data/outputs/checkpoints/
+data/outputs/optuna/
+*.pt
+*.bin
+*.safetensors
+
+# data (don't commit raw xlsx)
+data/raw/
+data/labeled/
+data/cleaned/
+
+# OS
+.DS_Store
+Thumbs.db
+
+Petunjuk Teknis Case 1 BDC (Internal - 2026).pdf
