@@ -1,8 +1,8 @@
 # MBG Tweet Classification — Case 1 BDC Internal 2026
 
-> **Task**: 8-class text classification of Indonesian tweets about Program Makan Bergizi Gratis (MBG)  
-> **Metric**: Balanced Accuracy (macro recall — setiap kelas berkontribusi sama terlepas dari frekuensi)  
-> **Dataset**: 5.000 labeled tweets (train) + 1.500 tweets (test)  
+> **Task**: 8-class text classification of Indonesian tweets about Program Makan Bergizi Gratis (MBG)
+> **Metric**: Balanced Accuracy (macro recall — setiap kelas berkontribusi sama terlepas dari frekuensi)
+> **Dataset**: 5.000 labeled tweets (train) + 1.500 tweets (test)
 > **Environment**: Python 3.11 · Tesla T4 16 GB (BERT) · CPU (baseline)
 
 ---
@@ -26,9 +26,9 @@
 mbg_case1/
 ├── data/
 │   ├── raw/                          # xlsx asli dari panitia (read-only)
-│   │   ├── case_1_labeled_data.xlsx  # 5.000 labeled tweets
-│   │   ├── case_1_text_to_predict.xlsx  # 1.500 test tweets
-│   │   └── case_1_template_sheet.xlsx   # format submission
+│   │   ├── case_1_labeled_data.xlsx
+│   │   ├── case_1_text_to_predict.xlsx
+│   │   └── case_1_template_sheet.xlsx
 │   ├── labeled/
 │   │   └── hasil_label_baru.xlsx     # LLM re-labeled (Ollama Gemma 31B)
 │   ├── cleaned/
@@ -37,14 +37,14 @@ mbg_case1/
 │       ├── checkpoints/              # BERT fold checkpoints (resume-safe)
 │       ├── optuna/                   # Optuna study results
 │       └── submissions/
-│           ├── submission_baseline.xlsx        # Logistic OOF=0.6418
-│           └── submission_ensemble_w0.6.xlsx   # XLM-R+IndoBERT OOF=0.7408
+│           ├── submission_baseline.xlsx       # Logistic OOF=0.6418
+│           └── submission_ensemble_w0.6.xlsx  # XLM-R+IndoBERT OOF=0.7408
 ├── notebooks/
-│   ├── 01_EDA.ipynb           # Exploratory data analysis
-│   ├── 02_LabelCleaning.ipynb # Cleanlab noise detection + manual review
-│   ├── 03_Baseline.ipynb      # TF-IDF + traditional ML (CPU)
-│   ├── 04_AdvancedBERT.ipynb  # XLM-R + IndoBERT fine-tuning (GPU)
-│   └── 05_Optuna.ipynb        # Hyperparameter tuning (Optuna)
+│   ├── 01_EDA.ipynb            # Exploratory data analysis
+│   ├── 02_LabelCleaning.ipynb  # Cleanlab noise detection + manual review
+│   ├── 03_Baseline.ipynb       # TF-IDF + traditional ML (CPU)
+│   ├── 04_AdvancedBERT.ipynb   # XLM-R + IndoBERT fine-tuning (GPU)
+│   └── 05_Optuna.ipynb         # Hyperparameter tuning (Optuna)
 ├── src/
 │   ├── config.py         # Config dataclass — semua hyperparameter
 │   ├── preprocessing.py  # clean_text
@@ -69,15 +69,15 @@ mbg_case1/
 |---|---:|---:|---:|---:|
 | Kualitas Pangan | 1247 | 1229 | -18 | 24.6% |
 | Politik | 792 | 780 | -12 | 15.6% |
-| Anggaran | 727 | 767 | **+40** | 15.3% |
-| Lainnya | 638 | 570 | **-68** | 11.4% |
-| Tata Kelola | 511 | 569 | **+58** | 11.4% |
+| Anggaran | 727 | 767 | +40 | 15.3% |
+| Lainnya | 638 | 570 | -68 | 11.4% |
+| Tata Kelola | 511 | 569 | +58 | 11.4% |
 | Sasaran Penerima | 507 | 521 | +14 | 10.4% |
-| Distribusi | 433 | 368 | **-65** | 7.4% |
+| Distribusi | 433 | 368 | -65 | 7.4% |
 | **Ekonomi** | **145** | **196** | **+51** | **3.9%** |
 | **Total** | **5000** | **5000** | **0** | **100%** |
 
-> **Imbalance ratio**: 1247 ÷ 145 = **8.6×** (original) → 1229 ÷ 196 = **6.3×** (LLM-labeled)  
+> **Imbalance ratio**: 1247 ÷ 145 = **8.6×** (original) → 1229 ÷ 196 = **6.3×** (LLM-labeled)
 > LLM re-labeling berhasil mengurangi imbalance ratio 27%, terutama memperbaiki representasi kelas Ekonomi (+35%).
 
 ### Text Length Statistics
@@ -107,7 +107,7 @@ Menggunakan **Cleanlab Confident Learning** untuk deteksi label noise secara alg
 | Metric | Nilai |
 |---|---:|
 | Total samples | 5.000 |
-| Label issues terdeteksi | **1.262** (25.2%) |
+| Label issues terdeteksi | **1.262 (25.2%)** |
 | Sangat mencurigakan (conf < 0.3) | **1.224** |
 | OOF Balanced Acc (TF-IDF SVM, pre-cleaning) | 0.5818 |
 
@@ -117,18 +117,16 @@ Menggunakan **Cleanlab Confident Learning** untuk deteksi label noise secara alg
 |---|---:|---:|---:|---|
 | Lainnya | 202 | 638 | **31.7%** | 🔴 HIGH |
 | Politik | 248 | 792 | **31.3%** | 🔴 HIGH |
-| Tata Kelola | 152 | 511 | 29.7% | 🟠 |
-| Sasaran Penerima | 149 | 507 | 29.4% | 🟠 |
-| Distribusi | 121 | 433 | 27.9% | 🟠 |
-| Ekonomi | 36 | 145 | 24.8% | 🟡 |
-| Kualitas Pangan | 225 | 1247 | 18.0% | 🟡 |
-| Anggaran | 129 | 727 | 17.7% | 🟡 |
+| Tata Kelola | 152 | 511 | 29.7% | 🟠 MED-HIGH |
+| Sasaran Penerima | 149 | 507 | 29.4% | 🟠 MED-HIGH |
+| Distribusi | 121 | 433 | 27.9% | 🟠 MED-HIGH |
+| Ekonomi | 36 | 145 | 24.8% | 🟡 MEDIUM |
+| Kualitas Pangan | 225 | 1247 | 18.0% | 🟡 MEDIUM |
+| Anggaran | 129 | 727 | 17.7% | 🟡 MEDIUM |
 
 > **Temuan kritis**: Kelas "Lainnya" dan "Politik" paling rentan noise. Banyak tweet yang berbau politis tapi sebenarnya membicarakan aspek spesifik (anggaran, kualitas pangan) — dan sebaliknya.
 
 ### Top Noise Confusion Pairs
-
-Pasangan label yang paling sering tertukar berdasarkan analisis notebook `02_LabelCleaning.ipynb`:
 
 | Label Saat Ini | Model Sarankan | Contoh Pola |
 |---|---|---|
@@ -153,7 +151,7 @@ Pasangan label yang paling sering tertukar berdasarkan analisis notebook `02_Lab
 | **Advanced** | **Ensemble XLM-R + IndoBERT** | **w=0.6/0.4** | **0.7408** | **-0.0592** |
 | Next step | Optuna-tuned (projected) | Best HPO params | ~0.80–0.83 | — |
 
-### Traditional ML Experiment Grid (03_Baseline.ipynb)
+### Traditional ML Experiment Grid
 
 | # | Model | Strategy | Ratio | Bal Acc | Ekonomi Recall | Runtime |
 |---|---|---|---|---:|---:|---:|
@@ -164,16 +162,16 @@ Pasangan label yang paling sering tertukar berdasarkan analisis notebook `02_Lab
 | | SVM | SMOTE | 0.8 | 0.5632 | 0.3469 | 4s |
 | | LGBM | none | 1.0 | 0.5576 | 0.4847 | 64s |
 
-> **Insight**: SMOTE justru menurunkan performa SVM (0.6365 → 0.5632). Ini karena interpolasi TF-IDF sparse vectors di feature space yang tinggi-dimensi tidak menghasilkan synthetic samples yang valid secara semantik. `class_weight='balanced'` sudah cukup efektif untuk SVM/Logistic.
+> **Insight**: SMOTE justru menurunkan performa SVM (0.6365 → 0.5632). Interpolasi TF-IDF sparse vectors di feature space tinggi-dimensi tidak menghasilkan synthetic samples yang valid secara semantik. `class_weight='balanced'` sudah cukup efektif untuk SVM/Logistic.
 
-### BERT Experiment Detail (04_AdvancedBERT.ipynb)
+### BERT Experiment Detail
 
 **Environment**: Tesla T4 · 15.6 GB VRAM · CUDA
 
 #### XLM-R-base Results
 
 | Fold | Best Epoch | Best Acc |
-|---|---|---|
+|---|---|---:|
 | Fold 1 | 12 | ~0.71 |
 | Fold 2 | ~8 | ~0.73 |
 | Fold 3 | ~10 | ~0.74 |
@@ -184,8 +182,8 @@ Pasangan label yang paling sering tertukar berdasarkan analisis notebook `02_Lab
 #### IndoBERT-p2 Results
 
 | Fold | Best Acc |
-|---|---|
-| Fold 1 | 0.5895 → 0.5849 (ep3) |
+|---|---:|
+| Fold 1 | 0.5849 |
 | Fold 2–5 | ~0.62–0.66 |
 | **Mean ± Std** | **0.6276 ± 0.0263** |
 
@@ -214,26 +212,26 @@ Pasangan label yang paling sering tertukar berdasarkan analisis notebook `02_Lab
 | Distribusi | **0.750** | 0.733 | 368 | ✅ Baik |
 | Ekonomi | **0.776** | 0.766 | 196 | ✅ Baik |
 | Kualitas Pangan | **0.765** | 0.805 | 1228 | ✅ Baik |
-| Lainnya | 0.695 | 0.668 | 570 | 🟡 Perlu perhatian |
 | Sasaran Penerima | 0.737 | 0.703 | 521 | ✅ Baik |
 | Tata Kelola | 0.701 | 0.665 | 569 | 🟡 Perlu perhatian |
+| Lainnya | 0.695 | 0.668 | 570 | 🟡 Perlu perhatian |
 | Politik | 0.672 | 0.695 | 780 | 🟡 Perlu perhatian |
 | **Balanced Acc** | **0.7408** | | | |
 
-> **Analisis**: Kelas Lainnya, Tata Kelola, dan Politik adalah tiga kelas terendah — sesuai dengan temuan Cleanlab bahwa ketiganya memiliki noise rate tertinggi (27–31%). Perbaikan manual review pada `label_review.xlsx` diprediksi dapat meningkatkan recall ketiga kelas ini secara signifikan.
+> Kelas Lainnya, Tata Kelola, dan Politik adalah tiga kelas terendah — konsisten dengan temuan Cleanlab bahwa ketiganya memiliki noise rate tertinggi (27–31%).
 
-### Progression per Kelas (Baseline vs Ensemble)
+### Progression per Kelas (Baseline → Ensemble)
 
 | Kelas | Logistic Baseline | XLM-R Alone | Ensemble | Δ (base→ens) |
 |---|---:|---:|---:|---:|
-| Anggaran | ~0.74 | ~0.81 | **0.832** | +~0.09 |
-| Distribusi | ~0.64 | ~0.73 | **0.750** | +~0.11 |
-| Ekonomi | **0.643** | ~0.75 | 0.776 | +~0.13 |
-| Kualitas Pangan | ~0.77 | ~0.76 | **0.765** | ~0.00 |
-| Lainnya | ~0.57 | ~0.68 | **0.695** | +~0.13 |
-| Politik | ~0.58 | ~0.65 | **0.672** | +~0.09 |
-| Sasaran Penerima | ~0.62 | ~0.72 | **0.737** | +~0.12 |
 | Tata Kelola | ~0.56 | ~0.69 | **0.701** | +~0.14 |
+| Lainnya | ~0.57 | ~0.68 | **0.695** | +~0.13 |
+| Ekonomi | ~0.64 | ~0.75 | **0.776** | +~0.13 |
+| Sasaran Penerima | ~0.62 | ~0.72 | **0.737** | +~0.12 |
+| Distribusi | ~0.64 | ~0.73 | **0.750** | +~0.11 |
+| Anggaran | ~0.74 | ~0.81 | **0.832** | +~0.09 |
+| Politik | ~0.58 | ~0.65 | **0.672** | +~0.09 |
+| Kualitas Pangan | ~0.77 | ~0.76 | **0.765** | ~0.00 |
 
 ---
 
@@ -255,8 +253,8 @@ Linear(1536 → 8)
 Logits
 ```
 
-**Kenapa CLS + Mean Pooling?**  
-`AutoModelForSequenceClassification` standar hanya menggunakan `[CLS]` token. Mean pooling merata-ratakan informasi dari seluruh token sequence, lebih robust untuk teks pendek (tweet) di mana [CLS] representasinya kurang stabil.
+**Kenapa CLS + Mean Pooling?**
+`AutoModelForSequenceClassification` standar hanya menggunakan `[CLS]` token. Mean pooling merata-ratakan informasi dari seluruh token sequence, lebih robust untuk teks pendek (tweet) di mana representasi `[CLS]` kurang stabil.
 
 ### Training Techniques
 
@@ -264,7 +262,7 @@ Logits
 |---|---|---|
 | **LLRD** (Layer-wise LR Decay) | factor=0.9 | Cegah catastrophic forgetting pada layer bawah encoder |
 | **FocalLoss** | γ=2.0 | Down-weight easy majority-class examples |
-| **Label Smoothing** | ε=0.1 | Mencegah overconfidence pada kelas ambigu (Lainnya, TataKelola) |
+| **Label Smoothing** | ε=0.1 | Cegah overconfidence pada kelas ambigu (Lainnya, Tata Kelola) |
 | **R-Drop** | α=0.3 | KL consistency loss antar 2 forward pass → regularisasi efektif |
 | **WeightedRandomSampler** | inverse-freq | Balanced batches → minority class (Ekonomi) terlihat cukup |
 | **Cosine schedule** | warmup=10% | Smooth convergence, avoids loss spikes |
@@ -278,8 +276,8 @@ Config(
     model_name      = 'xlm-roberta-base',
     max_len         = 256,
     pooling         = 'cls_mean',
-    epochs          = 12,           # was 8; XLM-R masih naik di ep 8
-    patience        = 4,            # was 3
+    epochs          = 12,
+    patience        = 4,
     batch_size      = 16,
     grad_accum      = 2,            # effective batch = 32
     lr              = 2e-5,
@@ -304,7 +302,7 @@ Config(
 | Convergence speed | Slower | Faster |
 | VRAM usage | ~5 GB | ~7 GB |
 
-> IndoBERT masih berguna dalam ensemble (+1.0 poin) karena error pattern-nya berbeda — keduanya complement each other.
+> IndoBERT masih berguna dalam ensemble (+1.0 poin) karena error pattern-nya berbeda — keduanya saling complement.
 
 ---
 
@@ -337,7 +335,6 @@ jupyter notebook notebooks/01_EDA.ipynb
 jupyter notebook notebooks/02_LabelCleaning.ipynb
 
 # 3. Baseline (~30-60 menit, CPU)
-# Tidak butuh GPU, menggunakan TF-IDF + traditional ML
 jupyter notebook notebooks/03_Baseline.ipynb
 
 # 4. BERT training (~2-3 jam, GPU T4)
@@ -345,7 +342,6 @@ jupyter notebook notebooks/03_Baseline.ipynb
 jupyter notebook notebooks/04_AdvancedBERT.ipynb
 
 # 5. Optuna tuning (~2 jam, GPU T4)
-# Jalankan setelah OOF >= 0.80 atau sebagai langkah akhir
 jupyter notebook notebooks/05_Optuna.ipynb
 ```
 
@@ -356,12 +352,11 @@ jupyter notebook notebooks/05_Optuna.ipynb
 import sys, os
 sys.path.insert(0, '/kaggle/input/mbg-case1-src')  # upload src/ sebagai dataset
 
-# Override paths di Config:
 cfg = Config(
-    output_dir = '/kaggle/working/outputs',
-    labeled_file = '/kaggle/input/mbg-dataset/hasil_label_baru.xlsx',
-    test_file    = '/kaggle/input/mbg-dataset/case_1_text_to_predict.xlsx',
-    template_file= '/kaggle/input/mbg-dataset/case_1_template_sheet.xlsx',
+    output_dir    = '/kaggle/working/outputs',
+    labeled_file  = '/kaggle/input/mbg-dataset/hasil_label_baru.xlsx',
+    test_file     = '/kaggle/input/mbg-dataset/case_1_text_to_predict.xlsx',
+    template_file = '/kaggle/input/mbg-dataset/case_1_template_sheet.xlsx',
 )
 ```
 
@@ -372,7 +367,7 @@ Jika session Kaggle/Colab crash di tengah training, cukup jalankan cell yang sam
 ```python
 # run_cv() otomatis skip fold yang sudah selesai
 # State disimpan di:
-# outputs/checkpoints/xlmr_fold1.pt      ← model weights
+# outputs/checkpoints/xlmr_fold1.pt       ← model weights
 # outputs/checkpoints/xlmr_oof_logits.npy ← OOF logits terakumulasi
 # outputs/checkpoints/xlmr_done_folds.txt ← list fold yang sudah selesai
 ```
@@ -383,15 +378,15 @@ Jika session Kaggle/Colab crash di tengah training, cukup jalankan cell yang sam
 
 ### Temuan Utama
 
-1. **XLM-R jauh lebih kuat dari IndoBERT** (+10.3 poin OOF). Ini konsisten dengan literatur — XLM-R dilatih pada korpus jauh lebih besar meskipun bukan monolingual Indonesian.
+1. **XLM-R jauh lebih kuat dari IndoBERT** (+10.3 poin OOF). Konsisten dengan literatur — XLM-R dilatih pada korpus jauh lebih besar meskipun bukan monolingual Indonesian.
 
 2. **SMOTE tidak efektif untuk TF-IDF sparse vectors**. Interpolasi di feature space 50k-dimensional tidak menghasilkan synthetic samples yang semantically valid. `class_weight='balanced'` lebih efektif dan 10× lebih cepat.
 
 3. **Label noise 25.2% adalah masalah nyata**. Politik (31.3%) dan Lainnya (31.7%) adalah dua kelas paling noisy — sesuai dengan performa terendah keduanya di BERT ensemble (0.672 dan 0.695).
 
-4. **Ensemble sederhana memberikan +1.0 poin** (0.7308 → 0.7408) dengan bobot optimal w_xlmr=0.6. Ini gratis setelah kedua model sudah di-train.
+4. **Ensemble sederhana memberikan +1.0 poin** (0.7308 → 0.7408) dengan bobot optimal w_xlmr=0.6. Gratis setelah kedua model sudah di-train.
 
-5. **Kelas Ekonomi (145 → 196 samples setelah LLM re-label)** performanya 0.776 — lebih baik dari yang diperkirakan mengingat jumlahnya kecil. WeightedRandomSampler + FocalLoss bekerja efektif.
+5. **Kelas Ekonomi (145 → 196 samples setelah LLM re-label)** performanya 0.776 — lebih baik dari yang diperkirakan. WeightedRandomSampler + FocalLoss bekerja efektif untuk minority class ini.
 
 ### Gap Analysis: Menuju 0.80+
 
@@ -399,14 +394,15 @@ Jika session Kaggle/Colab crash di tengah training, cukup jalankan cell yang sam
 |---|---|---|
 | Optuna tuning (40 trials) | +1–3 poin | Medium (2 jam GPU) |
 | Manual label review (top 200 rows) | +1–2 poin | Medium (human effort) |
-| AWP (enable `use_awp=True`) | +0.5–1 poin | Low (flag saja) |
+| AWP (`use_awp=True`) | +0.5–1 poin | Low (flag saja) |
 | XLM-R-large (V100/A100) | +2–5 poin | High (VRAM 24GB+) |
-| Tambah IndoBERT-large ke ensemble | +0.5–2 poin | Medium (1-2 jam GPU) |
+| IndoBERT-large ke ensemble | +0.5–2 poin | Medium (1–2 jam GPU) |
 
 **Rekomendasi prioritas** untuk deadline:
+
 1. Jalankan `05_Optuna.ipynb` — paling cost-effective
-2. Enable AWP (`cfg.use_awp=True`, `cfg.awp_start_epoch=3`) — satu baris kode
-3. Review manual top 200 rows di `label_review.xlsx` — fokus pada baris merah (conf < 0.2)
+2. Enable AWP: `cfg.use_awp=True`, `cfg.awp_start_epoch=3`
+3. Review manual top 200 rows di `label_review.xlsx` — fokus baris merah (conf < 0.2)
 
 ### Submission Files
 
@@ -437,5 +433,3 @@ lightgbm>=4.3.0
 ---
 
 *Last updated: May 2026 · BDC Internal Competition Case 1*
-#   M B G _ C a s e 1  
- 
