@@ -388,32 +388,6 @@ Jika session Kaggle/Colab crash di tengah training, cukup jalankan cell yang sam
 
 5. **Kelas Ekonomi (145 → 196 samples setelah LLM re-label)** performanya 0.776 — lebih baik dari yang diperkirakan. WeightedRandomSampler + FocalLoss bekerja efektif untuk minority class ini.
 
-### Gap Analysis: Menuju 0.80+
-
-| Improvement | Expected Gain | Effort |
-|---|---|---|
-| Optuna tuning (40 trials) | +1–3 poin | Medium (2 jam GPU) |
-| Manual label review (top 200 rows) | +1–2 poin | Medium (human effort) |
-| AWP (`use_awp=True`) | +0.5–1 poin | Low (flag saja) |
-| XLM-R-large (V100/A100) | +2–5 poin | High (VRAM 24GB+) |
-| IndoBERT-large ke ensemble | +0.5–2 poin | Medium (1–2 jam GPU) |
-
-**Rekomendasi prioritas** untuk deadline:
-
-1. Jalankan `05_Optuna.ipynb` — paling cost-effective
-2. Enable AWP: `cfg.use_awp=True`, `cfg.awp_start_epoch=3`
-3. Review manual top 200 rows di `label_review.xlsx` — fokus baris merah (conf < 0.2)
-
-### Submission Files
-
-| File | OOF Score | Keterangan |
-|---|---:|---|
-| `submission_baseline.xlsx` | 0.6418 | Logistic Regression, TF-IDF |
-| `submission_ensemble_w0.6.xlsx` | **0.7408** | ✅ **Submit ini** |
-| `submission_final_tuned.xlsx` | TBD | Setelah Optuna selesai |
-
----
-
 ## Dependencies
 
 ```
